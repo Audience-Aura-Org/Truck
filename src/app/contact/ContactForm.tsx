@@ -40,14 +40,23 @@ export default function ContactForm() {
 
     setStatus("submitting");
 
-    // Note: No backend form service is configured.
-    // This simulates the form flow. In production, connect to
-    // a form service (e.g. Formspree, SendGrid, or a custom API endpoint).
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    // Since no backend is configured, show a notice rather than pretending delivery succeeded.
-    setStatus("success");
-    setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Failed to send message");
+      }
+
+      setStatus("success");
+      setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+    } catch {
+      setStatus("error");
+    }
   };
 
   const handleChange = (field: keyof FormData, value: string) => {
@@ -65,10 +74,7 @@ export default function ContactForm() {
         </svg>
         <h3 className="text-lg font-semibold text-green-800 mb-2">Message Received</h3>
         <p className="text-sm text-green-700 mb-2">
-          Thank you for your enquiry. Our team will review your message and get back to you.
-        </p>
-        <p className="text-xs text-green-600 mb-4">
-          Note: Form submission backend is not yet configured. For immediate assistance, please call or WhatsApp us directly.
+          Thank you for your enquiry. We have sent you a confirmation email. Our team will review your message and get back to you within one business day.
         </p>
         <button
           onClick={() => setStatus("idle")}
@@ -164,6 +170,14 @@ export default function ContactForm() {
         />
         {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>}
       </div>
+
+      {status === "error" && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <p className="text-sm text-red-700">
+            Failed to send your message. Please try again, or contact us directly by phone or WhatsApp.
+          </p>
+        </div>
+      )}
 
       <button
         type="submit"

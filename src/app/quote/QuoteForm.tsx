@@ -54,13 +54,27 @@ export default function QuoteForm() {
     if (!validate()) return;
 
     setStatus("submitting");
-    // No backend configured - simulating form flow
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setStatus("success");
-    setFormData({
-      name: "", email: "", phone: "", company: "",
-      category: "", tyreSize: "", quantity: "", brands: "", product: "", details: "",
-    });
+
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Failed to submit quote request");
+      }
+
+      setStatus("success");
+      setFormData({
+        name: "", email: "", phone: "", company: "",
+        category: "", tyreSize: "", quantity: "", brands: "", product: "", details: "",
+      });
+    } catch {
+      setStatus("error");
+    }
   };
 
   const handleChange = (field: keyof QuoteFormData, value: string) => {
@@ -78,10 +92,7 @@ export default function QuoteForm() {
         </svg>
         <h3 className="text-lg font-semibold text-green-800 mb-2">Quote Request Received</h3>
         <p className="text-sm text-green-700 mb-2">
-          Thank you for your request. Our team will prepare a quotation and contact you.
-        </p>
-        <p className="text-xs text-green-600 mb-4">
-          Note: Form submission backend is not yet configured. For immediate pricing, please call or WhatsApp us directly.
+          Thank you for your request. We have sent you a confirmation email. Our team will prepare a competitive quotation and contact you within one business day.
         </p>
         <button
           onClick={() => setStatus("idle")}
@@ -256,6 +267,14 @@ export default function QuoteForm() {
           />
         </div>
       </div>
+
+      {status === "error" && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <p className="text-sm text-red-700">
+            Failed to submit your request. Please try again, or contact us directly by phone or WhatsApp.
+          </p>
+        </div>
+      )}
 
       <button
         type="submit"

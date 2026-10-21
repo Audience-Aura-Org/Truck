@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME, TYRE_BRANDS, CONTACT } from "@/lib/constants";
-import ContactActions from "@/components/ContactActions";
+
 
 export const metadata: Metadata = {
   title: "About Us",
