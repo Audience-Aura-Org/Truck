@@ -2,7 +2,6 @@
 
 import { useState, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
-import { categories } from "@/data/categories";
 
 interface QuoteFormData {
   name: string;
@@ -204,9 +203,7 @@ export default function QuoteForm() {
               className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat.slug} value={cat.name}>{cat.name}</option>
-              ))}
+              <option value="Truck">Truck Tyres</option>
             </select>
           </div>
 
@@ -248,7 +245,7 @@ export default function QuoteForm() {
               value={formData.brands}
               onChange={(e) => handleChange("brands", e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-              placeholder="e.g. Michelin, Bridgestone"
+              placeholder="e.g. Double Coin, Michelin, DRC"
             />
           </div>
         </div>

@@ -1,15 +1,16 @@
 import { FAQItem } from "@/lib/types";
+import { TYRE_BRANDS } from "@/lib/constants";
 
 export const faqItems: FAQItem[] = [
   {
     question: "What types of truck tyres do you supply?",
     answer:
-      "We supply a comprehensive range of commercial truck tyres including long haul, regional, urban/city, on/off road, winter, and trailer tyres. Our inventory covers major sizes such as 11R22.5, 11R24.5, 295/80R22.5, 315/80R22.5, 385/65R22.5, and many more.",
+      "We supply commercial truck tyres for steer, drive, all-position, and trailer applications, plus highway and off-road light-truck tyres. Use the product filters to find the right size and application.",
   },
   {
     question: "Which tyre brands do you carry?",
     answer:
-      "We work with leading global manufacturers including Michelin, Bridgestone, Goodyear, Continental, Pirelli, Hankook, Yokohama, Toyo, Kumho, GT Radial, Double Coin, and Linglong. We can source additional brands upon request.",
+      `Our truck tyre catalog includes ${TYRE_BRANDS.join(", ")}. Browse the brand filters to see the available products from each manufacturer.`,
   },
   {
     question: "Do you offer wholesale pricing?",

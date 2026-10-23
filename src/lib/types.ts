@@ -3,7 +3,7 @@ export interface Product {
   slug: string;
   name: string;
   brand: string;
-  category: "Truck" | "Car";
+  category: "Truck";
   type: string;
   size: string;
   origin: string;

@@ -1,20 +1,25 @@
 import { CategoryInfo } from "@/lib/types";
+import { products } from "@/data/products";
 
-export const categories: CategoryInfo[] = [
+const categoryDefinitions: CategoryInfo[] = [
   {
-    name: "Truck",
-    slug: "truck",
+    name: "Double Coin",
+    slug: "double-coin",
     description:
-      "Commercial truck tyres for all axle positions. Drive, steer, trailer, and all-position options from leading brands like DRC, Nebula, Force, and American Builder.",
+      "Double Coin commercial truck tyres for drive, steer, all-position, and trailer applications, including IM105 and RLB800 models.",
     icon: "truck",
-    image: "/uploads/D721 (2)-min.jpg",
+    image: "/uploads/double-coin/double-coin-11r22-5-drive-16pr.avif",
   },
   {
-    name: "Car",
-    slug: "car",
+    name: "Michelin",
+    slug: "michelin",
     description:
-      "Premium passenger car tyres for all-season, performance, and everyday driving. Quality Thailand-made tyres from Headway.",
-    icon: "car",
-    image: "/uploads/1.jpeg",
+      "Michelin commercial steer and trailer tyres, including XZY, X Works Z, XTE2, and X Maxitrailer models.",
+    icon: "truck",
+    image: "/uploads/michelin/michelin-10r22-5-steer-xzy.png",
   },
 ];
+
+export const categories = categoryDefinitions.filter((category) =>
+  products.some((product) => product.brand === category.name)
+);

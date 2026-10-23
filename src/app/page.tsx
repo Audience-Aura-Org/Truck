@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { products } from "@/data/products";
 import { categories } from "@/data/categories";
-import { SITE_NAME, CONTACT, TYRE_BRANDS } from "@/lib/constants";
+import { SITE_NAME, CONTACT, TYRE_BRANDS, PRIMARY_BRAND } from "@/lib/constants";
 import ProductCard from "@/components/ProductCard";
 import ContactActions from "@/components/ContactActions";
 import HeroVideo from "@/components/HeroVideo";
 
-const featuredProducts = products.slice(0, 6);
+const featuredProducts = products.filter((product) => product.brand === PRIMARY_BRAND).slice(0, 6);
 
 export default function HomePage() {
   return (
@@ -23,27 +23,27 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm font-medium px-4 py-2 rounded-full mb-6">
               <span className="w-2 h-2 bg-accent-400 rounded-full" />
-              Wholesale Truck Tyre Supplier
+              Double Coin — Our Primary Truck Tyre Brand
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Premium Commercial{" "}
+              Double Coin{" "}
               <span className="text-accent-400">Truck Tyres</span>{" "}
               for Every Fleet
             </h1>
 
             <p className="text-lg lg:text-xl text-brand-200 leading-relaxed mb-10 max-w-2xl">
-              {SITE_NAME} supplies quality truck tyres from leading global brands.
+              {SITE_NAME} features Double Coin as our primary truck tyre brand.
               Long haul, regional, urban, off-road, winter, and trailer &mdash;
               we have the right tyre for your operation.
             </p>
 
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/products"
+                href="/products?brand=Double%20Coin"
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-base font-semibold text-white bg-accent-600 rounded-xl hover:bg-accent-700 transition-colors"
               >
-                Browse Tyres
+                Shop Double Coin
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -72,8 +72,8 @@ export default function HomePage() {
       {/* ── Tyre Showcase Banner ────────────────────────── */}
       <section className="w-full bg-black">
         <img
-          src="/3.png"
-          alt="Premium Truck Tyre Showcase"
+          src="/assets/truck-showcase.png"
+          alt="Three commercial freight trucks on highways: a long-haul semi, a blue tractor-trailer, and a yellow tractor-trailer"
           className="w-full h-auto object-cover opacity-90"
         />
       </section>
@@ -85,7 +85,7 @@ export default function HomePage() {
             {[
               { value: `${products.length}+`, label: "Products Available" },
               { value: `${TYRE_BRANDS.length}`, label: "Trusted Brands" },
-              { value: "2", label: "Categories" },
+              { value: `${categories.length}`, label: "Popular Brands" },
               { value: "24/7", label: "Quote Requests" },
             ].map((stat) => (
               <div key={stat.label} className="text-center px-4">
@@ -104,11 +104,11 @@ export default function HomePage() {
         <div className="container-main">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Tyre Categories
+              Popular Brands
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We supply commercial truck tyres for every application.
-              Select a category to browse our range.
+              Explore our popular truck tyre brands, led by Double Coin.
+              Select a brand to browse its tyres.
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export default function HomePage() {
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/products?category=${encodeURIComponent(cat.name)}`}
+                href={`/products?brand=${encodeURIComponent(cat.name)}`}
                 className="group bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-brand-200 transition-all"
               >
                 <div className="flex items-start gap-4">
@@ -152,10 +152,10 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
             <div>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                Featured Tyres
+                Featured Double Coin Tyres
               </h2>
               <p className="text-gray-600">
-                A selection from our range of premium commercial truck tyres.
+                Explore our primary brand for steer, drive, all-position, and trailer tyres.
               </p>
             </div>
             <Link
@@ -256,7 +256,7 @@ export default function HomePage() {
               Brands We Supply
             </h2>
             <p className="text-gray-600 max-w-xl mx-auto">
-              We source from established global tyre manufacturers to ensure
+              Double Coin leads our truck tyre range. We also source from established manufacturers for
               quality and reliability for your fleet.
             </p>
           </div>
@@ -266,7 +266,7 @@ export default function HomePage() {
               <Link
                 key={brand}
                 href={`/products?brand=${encodeURIComponent(brand)}`}
-                className="flex-1 min-w-[140px] flex items-center justify-center h-16 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 font-semibold text-sm hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-all"
+                className={brand === PRIMARY_BRAND ? "flex-1 min-w-[180px] flex items-center justify-center h-16 bg-brand-700 border-2 border-brand-700 rounded-lg text-white font-bold text-base hover:bg-brand-800 transition-all" : "flex-1 min-w-[140px] flex items-center justify-center h-16 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 font-semibold text-sm hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-all"}
               >
                 {brand}
               </Link>

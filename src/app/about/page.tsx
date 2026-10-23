@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { SITE_NAME, TYRE_BRANDS, CONTACT } from "@/lib/constants";
+import { SITE_NAME, TYRE_BRANDS, CONTACT, PRIMARY_BRAND } from "@/lib/constants";
+import { categories } from "@/data/categories";
 
 
 export const metadata: Metadata = {
@@ -45,7 +46,7 @@ export default function AboutPage() {
             <p className="text-gray-600 leading-relaxed mb-4">
               {SITE_NAME} is a wholesale truck tyre supplier focused on providing
               commercial fleet operators, tyre dealers, and distributors with access to
-              premium truck tyres from established global manufacturers.
+              premium truck tyres, with Double Coin as our primary brand.
             </p>
             <p className="text-gray-600 leading-relaxed">
               We supply a wide range of commercial tyre categories including long haul,
@@ -56,8 +57,8 @@ export default function AboutPage() {
           </div>
           <div className="grid grid-cols-2 gap-4 content-start">
             {[
-              { value: "5+", label: "Trusted Brands" },
-              { value: "2", label: "Tyre Categories" },
+              { value: `${TYRE_BRANDS.length}`, label: "Trusted Brands" },
+              { value: `${categories.length}`, label: "Popular Brands" },
               { value: "24/7", label: "Quote Support" },
               { value: "100%", label: "Quality Focus" },
             ].map((stat) => (
@@ -155,7 +156,7 @@ export default function AboutPage() {
           <div className="text-center mb-10">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">Brands We Work With</h2>
             <p className="text-gray-600 max-w-xl mx-auto">
-              We source truck tyres from established manufacturers to give our customers
+              Double Coin is our primary truck tyre brand. Other manufacturers give our customers
               options across different performance levels.
             </p>
           </div>
@@ -164,7 +165,7 @@ export default function AboutPage() {
               <Link
                 key={brand}
                 href={`/products?brand=${encodeURIComponent(brand)}`}
-                className="flex-1 min-w-[140px] max-w-[200px] flex items-center justify-center h-16 bg-white border border-gray-200 rounded-lg text-gray-700 font-semibold text-sm hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-all"
+                className={brand === PRIMARY_BRAND ? "flex-1 min-w-[180px] flex items-center justify-center h-16 bg-brand-700 border-2 border-brand-700 rounded-lg text-white font-bold text-base hover:bg-brand-800 transition-all" : "flex-1 min-w-[140px] max-w-[200px] flex items-center justify-center h-16 bg-white border border-gray-200 rounded-lg text-gray-700 font-semibold text-sm hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-all"}
               >
                 {brand}
               </Link>

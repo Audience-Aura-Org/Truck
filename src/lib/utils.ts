@@ -1,12 +1,13 @@
 import { Product } from "./types";
 import { products } from "@/data/products";
+import { PRIMARY_BRAND, TYRE_BRANDS } from "@/lib/constants";
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
 export function getProductsByCategory(category: string): Product[] {
-  return products.filter((p) => p.category === category);
+  return products.filter((p) => p.category === category || p.brand === category);
 }
 
 export function getProductsByBrand(brand: string): Product[] {
@@ -29,7 +30,7 @@ export function searchProducts(query: string): Product[] {
 }
 
 export function getUniqueBrands(): string[] {
-  return Array.from(new Set(products.map((p) => p.brand))).sort();
+  return [...TYRE_BRANDS];
 }
 
 export function getUniqueSizes(): string[] {
@@ -59,7 +60,7 @@ export function sortProducts(
     case "size":
       return sorted.sort((a, b) => a.size.localeCompare(b.size));
     default:
-      return sorted;
+      return sorted.sort((a, b) => Number(b.brand === PRIMARY_BRAND) - Number(a.brand === PRIMARY_BRAND));
   }
 }
 

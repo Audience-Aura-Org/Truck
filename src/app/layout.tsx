@@ -7,12 +7,13 @@ import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE_NAME} | Premium Commercial Truck Tyres`,
+    default: `${SITE_NAME} | Double Coin Truck Tyres`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   keywords: [
     "truck tyres",
+    "Double Coin truck tyres",
     "commercial tyres",
     "wholesale truck tires",
     "fleet tyres",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | Premium Commercial Truck Tyres`,
+    title: `${SITE_NAME} | Double Coin Truck Tyres`,
     description: SITE_DESCRIPTION,
   },
 };

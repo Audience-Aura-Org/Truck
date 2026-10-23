@@ -86,9 +86,11 @@ export default function ProductDetailPage({ params }: PageProps) {
                 <span className="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full">
                   {product.type}
                 </span>
-                <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
-                  {product.origin}
-                </span>
+                {product.origin && (
+                  <span className="bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                    {product.origin}
+                  </span>
+                )}
               </div>
               <p className="text-gray-600 leading-relaxed">
                 {product.description}
@@ -104,13 +106,13 @@ export default function ProductDetailPage({ params }: PageProps) {
                   { label: "Load Index", value: product.loadIndex },
                   { label: "Ply Rating", value: product.pr },
                   { label: "Tread Depth", value: product.treadDepth },
-                  { label: "Pattern", value: product.pattern || "Standard" },
+                  { label: "Pattern", value: product.pattern },
                   { label: "Origin", value: product.origin },
                   { label: "Brand", value: product.brand },
                   { label: "Tube Type", value: product.tubeType },
                   ...(product.standardRim ? [{ label: "Standard Rim", value: product.standardRim }] : []),
                   ...(product.sectionWidth ? [{ label: "Section Width", value: product.sectionWidth }] : []),
-                ].map((spec) => (
+                ].filter((spec) => spec.value).map((spec) => (
                   <div key={spec.label}>
                     <dt className="text-xs text-gray-500 uppercase font-medium">{spec.label}</dt>
                     <dd className="text-sm font-semibold text-gray-900 mt-1">{spec.value}</dd>

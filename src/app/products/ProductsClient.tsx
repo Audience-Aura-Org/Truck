@@ -29,7 +29,7 @@ export default function ProductsClient() {
     let result = query ? searchProducts(query) : [...products];
 
     if (selectedCategory) {
-      result = result.filter((p) => p.category === selectedCategory);
+      result = result.filter((p) => p.category === selectedCategory || p.brand === selectedCategory);
     }
     if (selectedBrand) {
       result = result.filter((p) => p.brand === selectedBrand);
@@ -66,10 +66,10 @@ export default function ProductsClient() {
             <span className="text-white">Products</span>
           </nav>
           <h1 className="text-3xl lg:text-4xl font-bold">
-            Commercial Truck &amp; Car Tyres
+            Truck Tyres
           </h1>
           <p className="text-brand-200 mt-2 max-w-2xl">
-            Browse our complete range of premium tyres. Filter by category, brand, type, or size to find the right product.
+            Browse commercial and light-truck tyres. Filter by brand, type, or size to find the right product.
           </p>
         </div>
       </section>
@@ -120,22 +120,22 @@ export default function ProductsClient() {
           <aside className={`lg:w-64 shrink-0 space-y-6 ${filtersOpen ? "block" : "hidden lg:block"}`}>
             {/* Category */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Category</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Popular Brands</h3>
               <div className="space-y-2">
                 <button
-                  onClick={() => setSelectedCategory("")}
+                  onClick={() => { setSelectedCategory(""); setSelectedBrand(""); }}
                   className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
-                    !selectedCategory ? "bg-brand-50 text-brand-700 font-medium" : "text-gray-600 hover:bg-gray-50"
+                    !selectedBrand ? "bg-brand-50 text-brand-700 font-medium" : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  All Categories
+                  All Brands
                 </button>
                 {categories.map((cat) => (
                   <button
                     key={cat.slug}
-                    onClick={() => setSelectedCategory(cat.name)}
+                    onClick={() => { setSelectedCategory(""); setSelectedBrand(cat.name); }}
                     className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
-                      selectedCategory === cat.name
+                      selectedBrand === cat.name
                         ? "bg-brand-50 text-brand-700 font-medium"
                         : "text-gray-600 hover:bg-gray-50"
                     }`}

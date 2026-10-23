@@ -16,7 +16,7 @@ export default function Header() {
       <div className="bg-brand-950 text-white text-sm hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-10">
           <p className="text-brand-200">
-            Wholesale Truck Tyre Supplier &mdash; Premium Brands, Global Supply
+            Wholesale Truck Tyres &mdash; Featuring Double Coin
           </p>
           <div className="flex items-center gap-5">
             <a

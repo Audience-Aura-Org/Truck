@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE_NAME, CONTACT, NAV_LINKS } from "@/lib/constants";
+import { categories } from "@/data/categories";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,7 +25,7 @@ export default function Footer() {
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mt-4">
               Your trusted wholesale supplier of premium commercial truck tyres.
-              Serving fleets with quality brands and competitive pricing.
+              Featuring Double Coin as our primary truck tyre brand.
             </p>
           </div>
 
@@ -62,8 +63,10 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               {[
-                { label: "Truck Tyres", href: "/products?category=Truck" },
-                { label: "Car Tyres", href: "/products?category=Car" },
+                ...categories.map((category) => ({
+                  label: `${category.name} Tyres`,
+                  href: `/products?brand=${encodeURIComponent(category.name)}`,
+                })),
                 { label: "Drive Tyres", href: "/products?type=Drive" },
                 { label: "Steer Tyres", href: "/products?type=Steer" },
                 { label: "Trailer Tyres", href: "/products?type=Trailer" },

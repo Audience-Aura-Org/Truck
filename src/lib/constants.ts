@@ -1,9 +1,11 @@
 import { ContactInfo } from "./types";
+import { products } from "@/data/products";
 
 export const SITE_NAME = "Global Prime Truck Tyres Supply";
-export const SITE_TAGLINE = "Premium Fleet Tyre Solutions";
+export const PRIMARY_BRAND = "Double Coin";
+export const SITE_TAGLINE = "Double Coin Truck Tyres & Fleet Solutions";
 export const SITE_DESCRIPTION =
-  "Global Prime Truck Tyres Supply is a trusted wholesale supplier of premium commercial truck tyres. We supply a wide range of sizes and brands for long haul, regional, urban, and off-road applications.";
+  "Global Prime Truck Tyres Supply features Double Coin as its primary truck tyre brand, alongside commercial and light-truck tyres for fleet, highway, and off-road applications.";
 
 export const CONTACT: ContactInfo = {
   phone: "+1 415-787-9551",
@@ -26,9 +28,8 @@ export const NAV_LINKS = [
 ] as const;
 
 export const TYRE_BRANDS = [
-  "DRC",
-  "Nebula",
-  "Force",
-  "American Builder",
-  "Headway",
-] as const;
+  PRIMARY_BRAND,
+  ...Array.from(new Set(products.map((product) => product.brand))).filter(
+    (brand) => brand !== PRIMARY_BRAND
+  ),
+];
