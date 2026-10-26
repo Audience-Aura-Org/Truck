@@ -85,6 +85,9 @@ interface ContactData {
   email: string;
   phone: string;
   company: string;
+  brands: string;
+  tyreSize: string;
+  quantity: string;
   message: string;
 }
 
@@ -98,6 +101,9 @@ export async function sendContactAdminEmail(raw: ContactData) {
       ${row("Email", `<a href="mailto:${data.email}" style="color:#0059a1;text-decoration:none;">${data.email}</a>`)}
       ${data.phone ? row("Phone", data.phone) : ""}
       ${data.company ? row("Company", data.company) : ""}
+      ${data.brands ? row("Brands Interested", data.brands) : ""}
+      ${data.tyreSize ? row("Tyre Sizes", data.tyreSize) : ""}
+      ${data.quantity ? row("Quantity", data.quantity) : ""}
     </table>
     <div style="margin-top:24px;padding:16px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
       <p style="margin:0 0 8px;font-size:13px;color:#6b7280;font-weight:600;">Message</p>
@@ -127,6 +133,12 @@ export async function sendContactClientEmail(raw: ContactData) {
       <p style="margin:0 0 8px;font-size:13px;color:#0059a1;font-weight:600;">Your Message</p>
       <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;white-space:pre-wrap;">${data.message}</p>
     </div>
+    ${data.brands || data.tyreSize || data.quantity ? `
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f7ff;border-radius:8px;border:1px solid #b9dffd;margin-bottom:24px;">
+      ${data.brands ? row("Brands Interested", data.brands) : ""}
+      ${data.tyreSize ? row("Tyre Sizes", data.tyreSize) : ""}
+      ${data.quantity ? row("Quantity", data.quantity) : ""}
+    </table>` : ""}
     <p style="margin:0 0 8px;font-size:14px;color:#374151;">For urgent enquiries, you can also reach us directly:</p>
     <p style="margin:0 0 4px;font-size:14px;color:#374151;">
       Phone: <a href="${CONTACT.phoneTel}" style="color:#0059a1;text-decoration:none;">${CONTACT.phoneFormatted}</a>

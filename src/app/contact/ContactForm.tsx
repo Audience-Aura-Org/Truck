@@ -7,6 +7,9 @@ interface FormData {
   email: string;
   phone: string;
   company: string;
+  brands: string;
+  tyreSize: string;
+  quantity: string;
   message: string;
 }
 
@@ -16,6 +19,9 @@ export default function ContactForm() {
     email: "",
     phone: "",
     company: "",
+    brands: "",
+    tyreSize: "",
+    quantity: "",
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -53,7 +59,7 @@ export default function ContactForm() {
       }
 
       setStatus("success");
-      setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", company: "", brands: "", tyreSize: "", quantity: "", message: "" });
     } catch {
       setStatus("error");
     }
@@ -150,6 +156,50 @@ export default function ContactForm() {
             onChange={(e) => handleChange("company", e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             placeholder="Company name"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div>
+          <label htmlFor="contact-brands" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Brands Interested
+          </label>
+          <input
+            id="contact-brands"
+            type="text"
+            value={formData.brands}
+            onChange={(e) => handleChange("brands", e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            placeholder="e.g. Double Coin, Michelin"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="contact-size" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Tyre Sizes
+          </label>
+          <input
+            id="contact-size"
+            type="text"
+            value={formData.tyreSize}
+            onChange={(e) => handleChange("tyreSize", e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            placeholder="e.g. 11R22.5, 295/75R22.5"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="contact-quantity" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Quantity
+          </label>
+          <input
+            id="contact-quantity"
+            type="text"
+            value={formData.quantity}
+            onChange={(e) => handleChange("quantity", e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            placeholder="Number of tyres"
           />
         </div>
       </div>

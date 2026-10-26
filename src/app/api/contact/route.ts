@@ -4,7 +4,7 @@ import { sendContactAdminEmail, sendContactClientEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, phone, company, message } = body;
+    const { name, email, phone, company, brands, tyreSize, quantity, message } = body;
 
     // Validate required fields
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
@@ -26,6 +26,9 @@ export async function POST(req: NextRequest) {
       email: email.trim(),
       phone: phone?.trim() || "",
       company: company?.trim() || "",
+      brands: brands?.trim() || "",
+      tyreSize: tyreSize?.trim() || "",
+      quantity: quantity?.trim() || "",
       message: message.trim(),
     };
 
