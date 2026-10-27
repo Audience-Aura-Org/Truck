@@ -11,7 +11,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || CONTACT.email;
+// Inbox that receives quote requests and contact enquiries
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "globalprimetrucktiressupply@gmail.com";
 const FROM_EMAIL = process.env.SMTP_FROM || `"${SITE_NAME}" <${process.env.SMTP_USER}>`;
 
 function escapeHtml(value: string): string {
