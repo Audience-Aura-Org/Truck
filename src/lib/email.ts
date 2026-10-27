@@ -11,8 +11,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Inbox that receives quote requests and contact enquiries
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "globalprimetrucktiressupply@gmail.com";
+// Inboxes that receive quote requests and contact enquiries. The Gmail copy
+// is always included, whatever ADMIN_EMAIL is set to.
+const ADMIN_EMAIL = Array.from(
+  new Set([process.env.ADMIN_EMAIL || CONTACT.email, "globalprimetrucktiressupply@gmail.com"])
+);
 const FROM_EMAIL = process.env.SMTP_FROM || `"${SITE_NAME}" <${process.env.SMTP_USER}>`;
 
 function escapeHtml(value: string): string {
