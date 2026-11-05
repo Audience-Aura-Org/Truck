@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Quote form error:", error);
     return NextResponse.json(
-      { error: "Failed to send quote request. Please try again later." },
+      { error: "Failed to send quote request. Please try again later.", code: (error as { code?: string }).code },
       { status: 500 }
     );
   }

@@ -16,7 +16,9 @@ const transporter = nodemailer.createTransport({
 const ADMIN_EMAIL = Array.from(
   new Set([process.env.ADMIN_EMAIL || CONTACT.email, "globalprimetrucktiressupply@gmail.com"])
 );
-const FROM_EMAIL = process.env.SMTP_FROM || `"${SITE_NAME}" <${process.env.SMTP_USER}>`;
+// Built here rather than read from env: quotes in an env value can be stripped by
+// the host's env loader, leaving no address, and Titan only accepts the mailbox itself.
+const FROM_EMAIL = `"${SITE_NAME}" <${process.env.SMTP_USER || CONTACT.email}>`;
 
 function escapeHtml(value: string): string {
   return value
