@@ -1,48 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactAdminEmail, sendContactClientEmail } from "@/lib/email";
+import { FIELD_LIMITS, clip, isHoneypotFilled, isValidEmail } from "@/lib/form-guard";
+import { clientKey, isSameOrigin, rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { name, email, phone, company, brands, tyreSize, quantity, message } = body;
+    if (!isSameOrigin(req)) {
+      return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+    }
 
-    // Validate required fields
-    if (!name?.trim() || !email?.trim() || !message?.trim()) {
+    const limit = rateLimit(`contact:${clientKey(req)}`, 5);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } }
+      );
+    }
+
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
+
+    // Bots fill the hidden "website" field; pretend success so they move on.
+    if (isHoneypotFilled(body.website)) {
+      return NextResponse.json({ success: true });
+    }
+
+    const data = {
+      name: clip(body.name, FIELD_LIMITS.name),
+      email: clip(body.email, FIELD_LIMITS.email),
+      phone: clip(body.phone, FIELD_LIMITS.phone),
+      company: clip(body.company, FIELD_LIMITS.company),
+      brands: clip(body.brands, FIELD_LIMITS.brands),
+      tyreSize: clip(body.tyreSize, FIELD_LIMITS.tyreSize),
+      quantity: clip(body.quantity, FIELD_LIMITS.quantity),
+      message: clip(body.message, FIELD_LIMITS.message),
+    };
+
+    if (!data.name || !data.email || !data.message) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
         { status: 400 }
       );
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!isValidEmail(data.email)) {
       return NextResponse.json(
         { error: "Please provide a valid email address." },
         { status: 400 }
       );
     }
 
-    const data = {
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone?.trim() || "",
-      company: company?.trim() || "",
-      brands: brands?.trim() || "",
-      tyreSize: tyreSize?.trim() || "",
-      quantity: quantity?.trim() || "",
-      message: message.trim(),
-    };
-
-    // Send both emails in parallel
-    await Promise.all([
-      sendContactAdminEmail(data),
-      sendContactClientEmail(data),
-    ]);
+    await sendContactAdminEmail(data);
+    // The acknowledgement is best-effort and carries no visitor-supplied text.
+    await sendContactClientEmail(data.email).catch((err) =>
+      console.error("Contact acknowledgement failed:", err)
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Contact form error:", error);
     return NextResponse.json(
-      { error: "Failed to send message. Please try again later.", code: (error as { code?: string }).code },
+      { error: "Failed to send message. Please try again later." },
       { status: 500 }
     );
   }

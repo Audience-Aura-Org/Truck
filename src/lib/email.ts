@@ -20,6 +20,10 @@ const ADMIN_EMAIL = Array.from(
 // the host's env loader, leaving no address, and Titan only accepts the mailbox itself.
 const FROM_EMAIL = `"${SITE_NAME}" <${process.env.SMTP_USER || CONTACT.email}>`;
 
+function oneLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -121,47 +125,49 @@ export async function sendContactAdminEmail(raw: ContactData) {
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     replyTo: raw.email,
-    subject: `New Enquiry from ${raw.name}`,
+    subject: `New Enquiry from ${oneLine(raw.name)}`,
     html: baseLayout(content),
   });
 }
 
-export async function sendContactClientEmail(raw: ContactData) {
-  const data = escapeFields(raw);
-  const content = `
-    <h2 style="margin:0 0 8px;font-size:18px;color:#111827;font-weight:700;">Thank You for Your Enquiry</h2>
+// Acknowledgements go to whatever address a visitor typed, so they contain no
+// visitor-supplied text. Otherwise the form could be used to send arbitrary
+// content (spam, phishing links) to strangers from our domain.
+function acknowledgementContent(heading: string, body: string): string {
+  return `
+    <h2 style="margin:0 0 8px;font-size:18px;color:#111827;font-weight:700;">${heading}</h2>
     <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">
-      Dear ${data.name},<br><br>
-      Thank you for reaching out to ${SITE_NAME}. We have received your message and our team will review it promptly.
-      You can expect a response within one business day.
+      Hello,<br><br>
+      ${body}
     </p>
-    <div style="margin:0 0 24px;padding:16px;background:#f0f7ff;border-radius:8px;border:1px solid #b9dffd;">
-      <p style="margin:0 0 8px;font-size:13px;color:#0059a1;font-weight:600;">Your Message</p>
-      <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;white-space:pre-wrap;">${data.message}</p>
-    </div>
-    ${data.brands || data.tyreSize || data.quantity ? `
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f7ff;border-radius:8px;border:1px solid #b9dffd;margin-bottom:24px;">
-      ${data.brands ? row("Brands Interested", data.brands) : ""}
-      ${data.tyreSize ? row("Tyre Sizes", data.tyreSize) : ""}
-      ${data.quantity ? row("Quantity", data.quantity) : ""}
-    </table>` : ""}
-    <p style="margin:0 0 8px;font-size:14px;color:#374151;">For urgent enquiries, you can also reach us directly:</p>
+    <p style="margin:0 0 8px;font-size:14px;color:#374151;">You can also reach us directly:</p>
     <p style="margin:0 0 4px;font-size:14px;color:#374151;">
       Phone: <a href="${CONTACT.phoneTel}" style="color:#0059a1;text-decoration:none;">${CONTACT.phoneFormatted}</a>
     </p>
     <p style="margin:0 0 4px;font-size:14px;color:#374151;">
       WhatsApp: <a href="${CONTACT.whatsappLink}" style="color:#0059a1;text-decoration:none;">Chat with us</a>
     </p>
+    <p style="margin:24px 0 0;font-size:13px;color:#6b7280;line-height:1.6;">
+      If you did not contact ${SITE_NAME}, you can ignore this email. We never ask for passwords
+      or card details by email, and we do not take payments on our website.
+    </p>
     <p style="margin:24px 0 0;font-size:14px;color:#374151;">
       Best regards,<br>
       <strong>${SITE_NAME} Team</strong>
     </p>`;
+}
 
+export async function sendContactClientEmail(to: string) {
   await transporter.sendMail({
     from: FROM_EMAIL,
-    to: raw.email,
+    to,
     subject: `We've received your enquiry — ${SITE_NAME}`,
-    html: baseLayout(content),
+    html: baseLayout(
+      acknowledgementContent(
+        "Thank You for Your Enquiry",
+        `Thank you for reaching out to ${SITE_NAME}. We have received your message and will respond within one business day.`
+      )
+    ),
   });
 }
 
@@ -214,47 +220,21 @@ export async function sendQuoteAdminEmail(raw: QuoteData) {
     from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     replyTo: raw.email,
-    subject: `Quote Request from ${raw.name}${raw.product ? ` — ${raw.product}` : ""}`,
+    subject: `Quote Request from ${oneLine(raw.name)}${raw.product ? ` — ${oneLine(raw.product)}` : ""}`,
     html: baseLayout(content),
   });
 }
 
-export async function sendQuoteClientEmail(raw: QuoteData) {
-  const data = escapeFields(raw);
-  const content = `
-    <h2 style="margin:0 0 8px;font-size:18px;color:#111827;font-weight:700;">Quote Request Received</h2>
-    <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">
-      Dear ${data.name},<br><br>
-      Thank you for requesting a quote from ${SITE_NAME}. Our team will review your requirements
-      and prepare a competitive quotation for you. You can expect to hear from us within one business day.
-    </p>
-
-    <p style="margin:0 0 12px;font-size:14px;font-weight:600;color:#111827;">Your Request Summary</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f7ff;border-radius:8px;border:1px solid #b9dffd;margin-bottom:24px;">
-      ${data.product ? row("Product", data.product) : ""}
-      ${data.category ? row("Category", data.category) : ""}
-      ${data.tyreSize ? row("Tyre Size", data.tyreSize) : ""}
-      ${data.quantity ? row("Quantity", data.quantity) : ""}
-      ${data.brands ? row("Preferred Brands", data.brands) : ""}
-      ${data.details ? row("Details", data.details) : ""}
-    </table>
-
-    <p style="margin:0 0 8px;font-size:14px;color:#374151;">Need to discuss your requirements? Reach us directly:</p>
-    <p style="margin:0 0 4px;font-size:14px;color:#374151;">
-      Phone: <a href="${CONTACT.phoneTel}" style="color:#0059a1;text-decoration:none;">${CONTACT.phoneFormatted}</a>
-    </p>
-    <p style="margin:0 0 4px;font-size:14px;color:#374151;">
-      WhatsApp: <a href="${CONTACT.whatsappLink}" style="color:#0059a1;text-decoration:none;">Chat with us</a>
-    </p>
-    <p style="margin:24px 0 0;font-size:14px;color:#374151;">
-      Best regards,<br>
-      <strong>${SITE_NAME} Team</strong>
-    </p>`;
-
+export async function sendQuoteClientEmail(to: string) {
   await transporter.sendMail({
     from: FROM_EMAIL,
-    to: raw.email,
+    to,
     subject: `Your quote request has been received — ${SITE_NAME}`,
-    html: baseLayout(content),
+    html: baseLayout(
+      acknowledgementContent(
+        "Quote Request Received",
+        `Thank you for requesting a quote from ${SITE_NAME}. Our team will review your requirements and reply within one business day.`
+      )
+    ),
   });
 }

@@ -148,7 +148,14 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <p>&copy; {currentYear} {SITE_NAME}. All rights reserved.</p>
+          <div className="text-center sm:text-left">
+            <p>&copy; {currentYear} {SITE_NAME}. All rights reserved.</p>
+            <p className="mt-1 text-xs text-gray-600 max-w-xl">
+              {SITE_NAME} is an independent tyre supplier and is not affiliated with or endorsed by the
+              tyre manufacturers whose products we sell. Brand names and trademarks belong to their
+              respective owners. We do not take card payments on this website.
+            </p>
+          </div>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">
               Privacy Policy

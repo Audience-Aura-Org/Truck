@@ -51,6 +51,7 @@ export default function QuoteForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    const website = String(new FormData(e.currentTarget as HTMLFormElement).get("website") ?? "");
 
     setStatus("submitting");
 
@@ -58,7 +59,7 @@ export default function QuoteForm() {
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, website }),
       });
 
       if (!res.ok) {
@@ -105,6 +106,11 @@ export default function QuoteForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      {/* Hidden from people; bots that fill it are dropped by the API. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor="quote-website">Website</label>
+        <input id="quote-website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+      </div>
       <div>
         <h2 className="text-xl font-bold text-gray-900 mb-1">Your Details</h2>
         <p className="text-sm text-gray-500 mb-5">Tell us who you are so we can send you the quote.</p>

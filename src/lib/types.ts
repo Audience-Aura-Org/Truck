@@ -27,6 +27,7 @@ export interface ContactInfo {
   smsLink: string;
   whatsappLink: string;
   email: string;
+  emailMailto: string;
   address: string;
   addressShort: string;
   mapsLink: string;
