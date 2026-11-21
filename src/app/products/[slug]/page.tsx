@@ -8,15 +8,16 @@ import ContactActions from "@/components/ContactActions";
 import ProductCard from "@/components/ProductCard";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const product = getProductBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
 
   return {
@@ -29,8 +30,9 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-export default function ProductDetailPage({ params }: PageProps) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
   if (!product) notFound();
 
   const whatsappMsg = `Hi, I'm interested in the ${product.brand} ${product.name} (${product.size}). Could you provide pricing and availability information?`;
